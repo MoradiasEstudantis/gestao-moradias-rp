@@ -29,6 +29,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/residences/{id}").permitAll() // Qualquer um pode ver uma residência específica
+                        .requestMatchers(HttpMethod.POST, "/residences").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/residences/{id}").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/residences/{id}").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/residences/my-residences").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated() // Qualquer outra requisição precisa de autenticação

@@ -28,6 +28,9 @@ public class User {
     @Column(nullable = false)
     private RoleEnum role;
 
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Residence> residences = new ArrayList<>();
+
     // --- Getters e Setters ---
     
     public User() {}
@@ -69,5 +72,13 @@ public class User {
 
     public void setRole(RoleEnum role) {
         this.role = role;
+    }
+
+    public List<Residence> getResidences() {
+        return residences;
+    }
+
+    public void setResidences(List<Residence> residences) {
+        this.residences = residences;
     }
 }
