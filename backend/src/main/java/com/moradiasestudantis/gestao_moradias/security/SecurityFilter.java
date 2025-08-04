@@ -31,14 +31,21 @@ public class SecurityFilter extends OncePerRequestFilter {
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
 
-        // ✅ Ignora rotas públicas
+
+         //  Evita sobrescrever autenticação de testes (como @WithMockUser)
+        if (SecurityContextHolder.getContext().getAuthentication() != null) {
+            filterChain.doFilter(request, response);
+            return;
+        }                                
+
+        //  Ignora rotas públicas
         String path = request.getServletPath();
         if (path.startsWith("/auth/login") || path.startsWith("/auth/register")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        // ✅ Tenta recuperar e validar o token
+        //  Tenta recuperar e validar o token
         var token = this.recoverToken(request);
 
         if (token != null) {
@@ -53,12 +60,12 @@ public class SecurityFilter extends OncePerRequestFilter {
                         
                 }
             } catch (Exception e) {
-                // ⚠️ Silencia erros de token inválido sem bloquear o fluxo
+                //  Silencia erros de token inválido sem bloquear o fluxo
                 System.out.println("Token inválido ou erro no filtro: " + e.getMessage());
             }
         }
 
-        // ✅ Continua o fluxo normalmente
+        //  Continua o fluxo normalmente
         filterChain.doFilter(request, response);
     }
 
