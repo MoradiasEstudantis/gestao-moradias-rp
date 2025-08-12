@@ -29,10 +29,10 @@ jobs:
 
       - name: Usar segredo 
         env:
-          API_KEY: ${{ secrets.API_KEY }}
+          API_SECURITY_TOKEN_SECRET: ${{ secrets.API_SECURITY_TOKEN_SECRET }}
         run: echo "Chave API carregada"
 
-      - name: Mostrar URL configurada
+      - name: Mostrar URL configurad
         run: echo "Usando API em $API_URL"
 
       - name: Compilar e rodar testes com perfil de testes
